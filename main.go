@@ -1,9 +1,11 @@
 package main
 
-import "net/http"
-import "github.com/gin-gonic/gin"
-
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 var router *gin.Engine
+
 
 func main()  {
 	//Creates a default route
@@ -12,21 +14,29 @@ func main()  {
 	//Load templates directory
 	router.LoadHTMLGlob("templates/*")
 
-	//Define router handler
+	//Initial routes
+
+	// Handle the index route
 	router.GET("/", func(c *gin.Context) {
-		//Call the html method
+		articles := GetAllArticle()
+
+		// Call the HTML method of the Context to render a template
 		c.HTML(
-			//Set the HTTP status to 200 OK
+			// Set the HTTP status to 200 (OK)
 			http.StatusOK,
-			//Use Index html file
+			// Use the index.html template
 			"index.html",
-			//Pass the data that the page uses(in this case 'title')
+			// Pass the data that the page uses
 			gin.H{
-				"title":"HomePage",
+				"title":   "Home Page",
+				"payload": articles,
 			},
-			)
+		)
+
 	})
+
 	//Start serving the application
 	router.Run()
 
 }
+
